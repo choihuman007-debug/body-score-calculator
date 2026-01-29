@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>세션 신체점수 계산기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+h1 { text-align: center; }
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 700;
+}
+input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover { background-color: #1976D2; }
+.result {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+<h1>세션 신체점수 계산기</h1>
+<form id="scoreForm">
+    <label>통증 (0~10)
+        <input type="number" id="pain" min="0" max="10" step="0.1" required>
+    </label>
+    <label>뻣뻣함 (0~10)
+        <input type="number" id="stiffness" min="0" max="10" step="0.1" required>
+    </label>
+    <label>수면 상태 (1~5)
+        <input type="number" id="sleep" min="1" max="5" step="1" required>
+    </label>
+    <label>오늘의 컨디션 (1~5)
+        <input type="number" id="condition" min="1" max="5" step="1" required>
+    </label>
+    <label>만족도 (1~5)
+        <input type="number" id="satisfaction" min="1" max="5" step="1" required>
+    </label>
+    <button type="button" onclick="calculateScore()">계산하기</button>
+</form>
+<div class="result" id="resultArea"></div>
+<script>
+function calculateScore() {
+    var pain = parseFloat(document.getElementById('pain').value);
+    var stiffness = parseFloat(document.getElementById('stiffness').value);
+    var sleep = parseFloat(document.getElementById('sleep').value);
+    var condition = parseFloat(document.getElementById('condition').value);
+    var satisfaction = parseFloat(document.getElementById('satisfaction').value);
+
+    // 입력값 유효성 확인
+    if (isNaN(pain) || pain < 0 || pain > 10 ||
+        isNaN(stiffness) || stiffness < 0 || stiffness > 10 ||
+        isNaN(sleep) || sleep < 1 || sleep > 5 ||
+        isNaN(condition) || condition < 1 || condition > 5 ||
+        isNaN(satisfaction) || satisfaction < 1 || satisfaction > 5) {
+        document.getElementById('resultArea').innerText = '입력값을 올바르게 입력해 주세요.';
+        return;
+    }
+
+    var painScore = (1 - (pain / 10)) * 100;
+    var stiffnessScore = (1 - (stiffness / 10)) * 100;
+    var sleepScore = ((sleep - 1) / 4) * 100;
+    var conditionScore = ((condition - 1) / 4) * 100;
+    var satisfactionScore = ((satisfaction - 1) / 4) * 100;
+
+    var average = (painScore + stiffnessScore + sleepScore + conditionScore + satisfactionScore) / 5;
+    average = Math.round(average * 100) / 100; // 소수점 둘째자리까지 반올림
+
+    document.getElementById('resultArea').innerText = '오늘의 신체 점수: ' + average + '%';
+}
+</script>
+</body>
+</html>
